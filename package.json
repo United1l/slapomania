@@ -1,0 +1,19 @@
+{
+  "name": "slapomania",
+  "version": "1.0.0",
+  "description": "An action and mental game",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/United1l/slapomania.git"
+  },
+  "author": "United1l",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/United1l/slapomania/issues"
+  },
+  "homepage": "https://github.com/United1l/slapomania#readme"
+}
