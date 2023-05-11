@@ -42,7 +42,8 @@ window.addEventListener('load', function(){
 		}
 
 		update(){
-			this.AI.slap();
+			//this.AI.slap();
+		//	this.questions.outputOperation();
 		}
 
 
@@ -57,7 +58,7 @@ window.addEventListener('load', function(){
 	function animate() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 		game.draw(ctx);
-		//game.update();
+		game.update();
 		requestAnimationFrame(animate);
 	}
 

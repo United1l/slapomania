@@ -2,6 +2,8 @@ export class QuestionGenerator {
 	constructor() {
 	this.width = 400;
 	this.height = 160;
+	this.questionText = "";
+	this.answerText = "wrong!"
 	}
 
 	draw(context, x, y){
@@ -16,10 +18,39 @@ export class QuestionGenerator {
 		context.moveTo(x, strokePos);
 		context.lineTo(x+this.width, strokePos);
 		context.stroke();
+
+		// question text output
+		context.fillStyle = 'hsl(0, 0%, 80%)';
+		context.font = '4em sans-serif';
+		context.fillText(this.questionText, x + 60, strokePos - 22);
+
+		// answer text output
+		context.fillStyle = 'hsl(0, 0%, 80%)';
+		context.font = '4em sans-serif';
+		context.fillText(this.answerText, x + 100, strokePos + 58);
 	}
 
-	outputOperation(context){
-		//context.text = '';
-		//setInterval(,2000)
+	outputOperation(){
+		setInterval(() => this.questionText = "",2000);
+		this.updateQuestion(this.questionText);
+	}
+
+	updateQuestion(prevQuestion){
+		let currentQuestion = this.questionGenerator();
+		if (prevQuestion != currentQuestion) {
+			this.questionText = currentQuestion;
+		} else {
+			currentQuestion = this.questionGenerator();
+		}
+	}
+
+	questionGenerator(){
+		let question = `${this.randomNumber()} + ${this.randomNumber()}`;
+		console.log(question);
+		return question;
+	}
+
+	randomNumber(){
+		return Math.floor((Math.random() * 1000) + 1);
 	}
 }
