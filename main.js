@@ -55,23 +55,29 @@ window.addEventListener('load', function(){
 	console.log(game.AI);
 	game.input.keyDown();
 
-	function animate(timestamp) {
-		const duration = 2000;
-		let startTime = null;
-		if (!startTime) {
-			startTime = timestamp;
-		}
-		let runTime = timestamp - startTime;
+	let start = null;
+	
+	function animate() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 		game.draw(ctx);
-		if (runTime < duration) {
-			requestAnimationFrame(animate);
-		} else {
-			game.update();
-		}
+		start = true;
+
 		requestAnimationFrame(animate);
 	}
 
-	animate();
+	function generateQues(bool) {
+		let boolValue = bool;
+		let startTime = null;
+		if(boolValue && !startTime) {
+			startTime = performance.now();
+		}
+		let runTime = performance.now() - startTime;
 
+		if (runTime >= 3000) game.update();
+
+		startTime = performance.now();
+	}
+
+	animate();
+	generateQues(start);
 });

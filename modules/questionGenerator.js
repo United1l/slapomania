@@ -31,17 +31,14 @@ export class QuestionGenerator {
 	}
 
 	outputOperation(){
-		setInterval(() => this.questionText = "",2000);
 		this.updateQuestion(this.questionText);
 	}
 
 	updateQuestion(prevQuestion){
 		let currentQuestion = this.questionGenerator();
-		if (prevQuestion != currentQuestion) {
-			this.questionText = currentQuestion;
-		} else {
-			currentQuestion = this.questionGenerator();
-		}
+		if (prevQuestion != currentQuestion) this.questionText = currentQuestion;
+		else currentQuestion = this.questionGenerator();
+		
 	}
 
 	questionGenerator(){
