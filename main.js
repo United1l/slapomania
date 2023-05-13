@@ -43,7 +43,7 @@ window.addEventListener('load', function(){
 
 		update(){
 			//this.AI.slap();
-		//	this.questions.outputOperation();
+			this.questions.outputOperation();
 		}
 
 
@@ -55,10 +55,20 @@ window.addEventListener('load', function(){
 	console.log(game.AI);
 	game.input.keyDown();
 
-	function animate() {
+	function animate(timestamp) {
+		const duration = 2000;
+		let startTime = null;
+		if (!startTime) {
+			startTime = timestamp;
+		}
+		let runTime = timestamp - startTime;
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 		game.draw(ctx);
-		game.update();
+		if (runTime < duration) {
+			requestAnimationFrame(animate);
+		} else {
+			game.update();
+		}
 		requestAnimationFrame(animate);
 	}
 
