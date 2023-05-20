@@ -1,5 +1,4 @@
 import { Player } from './modules/player.js';
-import { PlayerInput } from './modules/playerInput.js';
 import { QuestionGenerator } from './modules/questionGenerator.js';
 
 window.addEventListener('load', function(){
@@ -13,10 +12,10 @@ window.addEventListener('load', function(){
 		constructor(width, height){
 			this.width = width;
 			this.height = height;
+			this.playerCorrect = null;
 			const playerPosTop = this.height/2.5;
 			this.AI = new Player(this, this.width/9, playerPosTop);
 			this.player = new Player(this, this.width/1.13, playerPosTop);
-			this.input = new PlayerInput();
 			this.questions = new QuestionGenerator();
 		}
 
@@ -42,8 +41,12 @@ window.addEventListener('load', function(){
 		}
 
 		update(){
-			//this.AI.slap();
+			this.questions.inputOperation();
 			this.questions.outputOperation();
+
+			if (this.playerCorrect != null) setTimeout(
+					this.questions.answerText = "", 2000
+				);
 		}
 
 
@@ -53,17 +56,30 @@ window.addEventListener('load', function(){
 	console.log(game);
 	console.log(game.player);
 	console.log(game.AI);
-	game.input.keyDown();
+
+	game.update();
 	
-	function animate(timestamp) {		
+	function animate() {		
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 		game.draw(ctx);
-		game.update();
 
-		setTimeout(() => {
-			game.update();
-			requestAnimationFrame(animate);
-		},6000);
+		let question = game.questions.questionText;
+		let answer = game.questions.answerText;
+
+		if (answer != "" && answer.length > 2) {
+			let solution = parseInt(question);
+			console.log(solution);
+			if (parseInt(answer) == solution) {
+				game.playerCorrect = true;
+				game.questions.answerText = "correct!";
+			}
+			else {
+				game.playerCorrect = false;
+				game.questions.answerText = "wrong!";
+			}
+		}
+
+		requestAnimationFrame(animate);
 	} 
 
 	animate();

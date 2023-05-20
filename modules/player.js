@@ -1,8 +1,8 @@
 export class Player {
 	constructor(game, x, y){
 		this.game = game;
-		this.width = 100;
-		this.height = 100;
+		this.width = 60;
+		this.height = 60;
 		this.x = x;
 		this.y = y;
 		this.handX = x;
@@ -21,9 +21,9 @@ export class Player {
 		// Hands
 		context.fillStyle = 'purple';
 		if (this.handX > 115) {
-			context.fillRect(this.handX - 350, this.handY - 20, 200, 90);
+			context.fillRect(this.handX - 350, this.handY - 20, 100, 90);
 		} else {
-			context.fillRect(this.handX + 150, this.handY - 20, 200, 90);
+			context.fillRect(this.handX + 150, this.handY - 20, 100, 90);
 		}
 
 	}

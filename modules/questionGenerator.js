@@ -3,10 +3,11 @@ export class QuestionGenerator {
 	this.width = 400;
 	this.height = 160;
 	this.questionText = "";
-	this.answerText = "wrong!"
+	this.answerText = "";
 	}
 
 	draw(context, x, y){
+		// question box
 		context.fillStyle = 'hsl(210, 9%, 31%)';
 		context.fillRect(x, y, this.width, this.height);
 
@@ -20,18 +21,30 @@ export class QuestionGenerator {
 		context.stroke();
 
 		// question text output
-		context.fillStyle = 'hsl(0, 0%, 80%)';
-		context.font = '4em sans-serif';
-		context.fillText(this.questionText, x + 60, strokePos - 22);
+		this.textOutput(context, this.questionText, x + 60, y, strokePos -22);
 
 		// answer text output
-		context.fillStyle = 'hsl(0, 0%, 80%)';
-		context.font = '4em sans-serif';
-		context.fillText(this.answerText, x + 100, strokePos + 58);
+		this.textOutput(context, this.answerText, x + 100, y, strokePos + 58);
+	}
+
+	inputOperation(){
+		window.addEventListener('keydown', e => {
+			let key = e.key;
+			console.log(key);
+			let keyToNumber = parseInt(key);
+
+			if(!isNaN(keyToNumber)) this.answerText += keyToNumber;
+			else if (key.toString() == 'Backspace') this.answerText.slice(0, this.answerText.length -1);
+			else console.log('Input is not a number');
+		});
+
 	}
 
 	outputOperation(){
-		this.updateQuestion(this.questionText);
+		setTimeout(() => {
+			this.updateQuestion(this.questionText);
+			this.outputOperation();
+		}, 10000);
 	}
 
 	updateQuestion(prevQuestion){
@@ -49,6 +62,13 @@ export class QuestionGenerator {
 	}
 
 	randomNumber(){
-		return Math.floor((Math.random() * 1000) + 1);
+		return Math.floor((Math.random() * 200) + 1);
+	}
+
+	textOutput(context, text, x, y, strokeposition){
+		context.fillStyle = 'hsl(0, 0%, 80%)';
+		context.font = '4em sans-serif';
+		context.fillText(text, x, strokeposition);
+
 	}
 }
