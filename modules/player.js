@@ -1,5 +1,5 @@
 export class Player {
-	constructor(game, x, y){
+	constructor(game, x, y) {
 		this.game = game;
 		this.width = 60;
 		this.height = 60;
@@ -12,7 +12,7 @@ export class Player {
 	}
 
 	// Draw function to draw player on to the canvas
-	draw(context){
+	draw(context) {
 		context.fillStyle = 'red';
 		context.beginPath();
 		context.arc(this.x, this.y, this.width, 0, Math.PI * 2, false);
@@ -29,13 +29,13 @@ export class Player {
 	}
 
 	// Life bar function that displays a player's life bar and its various properties
-	lifeBar(context, x, y, w, h, gradientDirection){
+	lifeBar(context, x, y, w, h, gradientDirection) {
 		let lifeValue = 100;
 		context.fillStyle = 'blue';
 		context.fillRect(x, y, w, h);
 	}
 
-	slap(){
+	slap() {
 		setInterval(() => {
 			this.handX += this.slapPower;
 			if (this.handX < 115) this.slapPower = 100;
@@ -44,7 +44,7 @@ export class Player {
 		}, 5000);
 	}
 
-	initialPos(){
+	initialPos() {
 		return this.handX <= 114;
 	} 
 }

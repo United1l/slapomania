@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="a slapping game">
 	<title>Slapomania</title>
-	<link rel="icon" href="./upload/af00.png" type="image/x-icon" />
+	<link rel="icon" href="./assets/af00.png" type="image/x-icon" />
 	<style type="text/css">
 		* {
 			padding: 0;
@@ -13,11 +13,52 @@
 		}
 
 		body {
+			font-family: 'poppins', sans-serif;
 			height: 100vh;
 			background-color: #000;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+		}
+
+		#overHeadBanner {
+			position: absolute;
+			top: 1%;
+			display: flex;
+			justify-content: space-between;
+			width: 100vw;
+			height: calc(100vh * 0.06);
+			background-color: white;
+		}
+
+		.lifeBar {
+			display: grid;
+			width: calc(100vw/2.4);
+			height: inherit;
+			background-color: white;
+
+		}
+
+		.healthBar {
+			background-color: pink;
+			height: inherit;
+			width: 70%;
+		}
+
+		#AIBar {
+			justify-self: end;
+		}
+
+		#clock {
+			border-radius: 50%;
+			background-color: blue;
+			height: inherit;
+			width: 13vw;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 24px;
+			color: white;
 		}
 
 		canvas {
@@ -28,6 +69,17 @@
 	</style>
 </head>
 <body>
+	<div id="overHeadBanner">
+		<div class="lifeBar">
+			<div id="AIBar" class="healthBar"></div>
+		</div>
+		<div id="clock"><p id="clockNumber">
+			60
+		</p></div>
+		<div class="lifeBar">
+			<div id="userBar" class="healthBar"></div>
+		</div>
+	</div>
 	<canvas></canvas>
 
 <script type="module" src="main.js"></script>

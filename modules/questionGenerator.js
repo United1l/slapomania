@@ -1,12 +1,15 @@
 export class QuestionGenerator {
-	constructor() {
+	constructor(game) {
+	this.game = game;	
 	this.width = 400;
 	this.height = 160;
+	this.questionGenerate = false;
 	this.questionText = "";
 	this.answerText = "";
+	this.keyTracker = false;
 	}
 
-	draw(context, x, y){
+	draw(context, x, y) {
 		// question box
 		context.fillStyle = 'hsl(210, 9%, 31%)';
 		context.fillRect(x, y, this.width, this.height);
@@ -27,45 +30,61 @@ export class QuestionGenerator {
 		this.textOutput(context, this.answerText, x + 100, y, strokePos + 58);
 	}
 
-	inputOperation(){
+	inputOperation() {
 		window.addEventListener('keydown', e => {
-			let key = e.key;
-			console.log(key);
-			let keyToNumber = parseInt(key);
+			this.keyTracker = false;
+			if (this.questionGenerate) {
+				let key = e.key;
+				let keyToNumber = parseInt(key); 
 
-			if(!isNaN(keyToNumber)) this.answerText += keyToNumber;
-			else if (key.toString() == 'Backspace') this.answerText.slice(0, this.answerText.length -1);
-			else console.log('Input is not a number');
+				if(!isNaN(keyToNumber)) this.answerText += keyToNumber;
+				else if (key == 'Backspace') this.answerText = this.answerText.substring(0, this.answerText.length - 1);
+				else console.log('Input is not a number');
+				} else this.answerText = "";
+		});
+
+		window.addEventListener('keyup', () => {
+			this.keyTracker = true;
 		});
 
 	}
 
-	outputOperation(){
+	outputOperation() {
 		setTimeout(() => {
+			this.questionGenerate = true;
 			this.updateQuestion(this.questionText);
+			this.clearConsole();
 			this.outputOperation();
 		}, 10000);
 	}
 
-	updateQuestion(prevQuestion){
+	clearConsole() {
+		setTimeout(() => {
+			if (this.game.playerCorrect != undefined) this.answerText = "";
+			else if (this.game.playerCorrect == undefined && this.answerText.length >= (1 || 2 || 3)) this.answerText = "";
+			this.clearConsole();
+		},4000);
+	}
+
+	updateQuestion(prevQuestion) {
 		let currentQuestion = this.questionGenerator();
 		if (prevQuestion != currentQuestion) this.questionText = currentQuestion;
 		else currentQuestion = this.questionGenerator();
 		
 	}
 
-	questionGenerator(){
+	questionGenerator() {
 		let question = null;
 		question = `${this.randomNumber()} + ${this.randomNumber()}`;
 		console.log(question);
 		return question;
 	}
 
-	randomNumber(){
+	randomNumber() {
 		return Math.floor((Math.random() * 200) + 1);
 	}
 
-	textOutput(context, text, x, y, strokeposition){
+	textOutput(context, text, x, y, strokeposition) {
 		context.fillStyle = 'hsl(0, 0%, 80%)';
 		context.font = '4em sans-serif';
 		context.fillText(text, x, strokeposition);
