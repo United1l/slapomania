@@ -6,6 +6,7 @@ export class QuestionGenerator {
 	this.questionGenerate = false;
 	this.questionText = "";
 	this.answerText = "";
+	this.solution = 0;
 	this.keyTracker = false;
 	}
 
@@ -20,7 +21,7 @@ export class QuestionGenerator {
 		context.lineCap = 'round';
 		context.beginPath();
 		context.moveTo(x, strokePos);
-		context.lineTo(x+this.width, strokePos);
+		context.lineTo(x + this.width, strokePos);
 		context.stroke();
 
 		// question text output
@@ -53,22 +54,17 @@ export class QuestionGenerator {
 		setTimeout(() => {
 			this.questionGenerate = true;
 			this.updateQuestion(this.questionText);
-			this.clearConsole();
+			this.answerText = "";
 			this.outputOperation();
 		}, 10000);
 	}
 
-	clearConsole() {
-		setTimeout(() => {
-			if (this.game.playerCorrect != undefined) this.answerText = "";
-			else if (this.game.playerCorrect == undefined && this.answerText.length >= (1 || 2 || 3)) this.answerText = "";
-			this.clearConsole();
-		},4000);
-	}
-
 	updateQuestion(prevQuestion) {
 		let currentQuestion = this.questionGenerator();
-		if (prevQuestion != currentQuestion) this.questionText = currentQuestion;
+		if (prevQuestion != currentQuestion) {
+			this.solution = eval(currentQuestion);
+			this.questionText = currentQuestion;
+		}
 		else currentQuestion = this.questionGenerator();
 		
 	}

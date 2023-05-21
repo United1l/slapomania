@@ -5,6 +5,10 @@ window.addEventListener('load', function() {
 	const canvas = document.querySelector('canvas');
 	const ctx = canvas.getContext('2d');
 
+	const AIBar = document.getElementById('AIBar');
+	const userBar = document.getElementById('userBar');
+	const clockNumber = document.getElementById('clockNumber');
+
 	canvas.width = 1024;
 	canvas.height = 576;
 
@@ -12,7 +16,6 @@ window.addEventListener('load', function() {
 		constructor(width, height) {
 			this.width = width;
 			this.height = height;
-			var playerCorrect;
 			const playerPosTop = this.height/2.5;
 			this.AI = new Player(this, this.width/9, playerPosTop);
 			this.player = new Player(this, this.width/1.13, playerPosTop);
@@ -29,48 +32,36 @@ window.addEventListener('load', function() {
 			let question = this.questions.questionText;
 			let answer = this.questions.answerText;
 
-			var solution;
-			if(this.questions.questionGenerate) solution = eval(question);
+			let solution = this.questions.solution;
 
-			if (answer != "" && answerTextLength(answer, solution)) {
-				console.log(solution);
-				this.playerCorrect = true;
-				this.questions.answerText = "correct!";
-			} else if (!answerTextLength(answer, solution)) this.playerCorrect = false; 
-			  else if (answer != "" && !answerTextLength(answer, solution)){
-				this.playerCorrect = false;
-				this.questions.answerText = "wrong!";
-				}
+			if (this.questions.keyTracker) {
+				if (answer != ""  && answer.length == solution.toString().length && this.evaluateAns((parseInt(answer)), solution)) {
+					this.questions.answerText = "correct!";
+				} else if (answer != "" && answer.length == solution.toString().length && !this.evaluateAns((parseInt(answer)), solution)) {
+					this.questions.answerText = "wrong!";
+				} else if (answer != "" && answer.length < solution.toString().length) this.questions.answerText = answer;
+				
 
-		}
+			}
+		}	
+
+
+			evaluateAns(userAns, compAns) {
+				if (userAns == compAns) return true;
+				else return false;
+			}
 
 		windowEvents() {
 			this.questions.outputOperation();
 			this.questions.inputOperation();
 		}
-
 	}
+
 
 	const game = new Game(canvas.width, canvas.height);
 	console.log(game);
 	console.log(game.player);
 	console.log(game.AI);
-
-	game.windowEvents();
-
-	// Function that takes an unknown array's length and tries to match it to an array of sorted numbers in order to find a value == its length 
-	function answerTextLength(answerString, compSolution) {
-		var evaluateAns;
-		let answerLength = answerString.length;
-		let solutionString = compSolution;
-		
-		if (game.keyTracker) {
-			if (eval(answerString) == compSolution) evaluateAns = true;
-			else if ((answerLength == solutionString) && (eval(answerString) != compSolution)) evaluateAns = false;
-		}
-
-		return evaluateAns; 
-	}
 	
 	function animate() {		
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -81,4 +72,6 @@ window.addEventListener('load', function() {
 	} 
 
 	animate();
+
+	game.windowEvents();
 });
