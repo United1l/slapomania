@@ -5,60 +5,139 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="a slapping game">
 	<title>Slapomania</title>
-	<link rel="icon" href="./assets/af00.png" type="image/x-icon" />
+	<link rel="icon" href="./assets/player-images/player-slapped.png" type="image/x-icon" />
 	<style type="text/css">
+		@font-face {
+			font-family: TheGlobe;
+			src: local("TheGlobe"),
+			url('./assets/fonts/TheGlobe.ttf')
+			format("opentype");
+		}
+
 		* {
 			padding: 0;
 			margin: 0;
 		}
 
 		body {
-			font-family: 'poppins', sans-serif;
+			font-family: TheGlobe;
 			height: 100vh;
+			width: 100vw;
 			background-color: #000;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 		}
 
+		#beforeGS {
+			display: flex;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 100;
+			height: inherit;
+			width: inherit;
+			background-color: #000;
+			flex-direction: column;
+			align-items: center;
+			justify-content: space-evenly;
+			color: white;
+		}
+
+		#greeting {
+			font-size: 48px;
+			color: lime;
+		}
+
+		#tagline {
+			font-size: 16px;
+		}
+
+		#gameEnd {
+			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 10;
+			height: inherit;
+			width: inherit;
+			background-color: #000;
+			flex-direction: column;
+			align-items: center;
+			justify-content: space-evenly;
+			color: white;
+		}
+
+		#gameWinner {
+			font-size: 40px;
+			color: lime;
+			margin-bottom:5px;
+		}
+
+		#playAgainBtn, #startBtn {
+			cursor: pointer;
+		}
+
+		#playAgainBtn:hover, #startBtn:hover {
+			color: lime;
+		} 
+
 		#overHeadBanner {
 			position: absolute;
 			top: 1%;
 			display: flex;
-			justify-content: space-between;
-			width: 100vw;
-			height: calc(100vh * 0.06);
+			justify-content: space-evenly;
+			width: 100%;
+			height: calc(100vh * 0.05);
 			background-color: white;
 		}
 
 		.lifeBar {
-			display: grid;
-			width: calc(100vw/2.4);
+			flex: 1;
+			display: flex;
 			height: inherit;
-			background-color: white;
+			justify-content: space-around;
+			align-items: center;
+		}
 
+		#userLifeBar {
+			flex-direction: row-reverse;
+		}
+
+		.playerIcons {
+			height: inherit;
+			display: flex;
+			justify-content: space-evenly;
+			width: 20%;
+			align-items: center;
+		}
+
+		.playerIcons >img {
+			height: 50px;
+			width: 60px;
+			border-radius: 50%;
 		}
 
 		.healthBar {
-			background-color: pink;
 			height: inherit;
-			width: 70%;
-		}
-
-		#AIBar {
-			justify-self: end;
+			width: 75%;
 		}
 
 		#clock {
+			font-family: 'poppins', sans-serif;
 			border-radius: 50%;
-			background-color: blue;
+			background-color: darkorange;
 			height: inherit;
-			width: 13vw;
+			width: 12vw;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			font-size: 24px;
 			color: white;
+		}
+
+		#imageBox {
+			display: none;
 		}
 
 		canvas {
@@ -69,16 +148,42 @@
 	</style>
 </head>
 <body>
+	<div id="beforeGS">
+		<p id="greeting">Welcome to Slapomania</p>
+		<p id="tagline">Where a slap is needed is a slap given.</p>
+		<div id="instructionsBox">
+			<ul></ul>
+		</div>
+		<p id="startBtn">Start</p>
+	</div>
+
+	<div id="gameEnd">
+		<div><p id="gameWinner"></p></div>
+		<p id="playAgainBtn">Play Again</p>
+	</div>
 	<div id="overHeadBanner">
 		<div class="lifeBar">
+			<div class="playerIcons">
+				<img src="./assets/player-images/AI.jpg">
+				<p>Bot</p>
+			</div>
 			<div id="AIBar" class="healthBar"></div>
 		</div>
 		<div id="clock"><p id="clockNumber">
-			60
 		</p></div>
-		<div class="lifeBar">
+		<div class="lifeBar" id="userLifeBar">
+			<div class="playerIcons" id="userPlayerIcon">
+				<img src="./assets/player-images/user.jpg">
+				<p>You</p>
+			</div>
 			<div id="userBar" class="healthBar"></div>
 		</div>
+	</div>
+	<div id="imageBox">
+		<img src="./assets/player-images/player-default.png" id="playerDefault">
+		<img src="./assets/player-images/player-slapped.png" id="playerSlapped">
+		<img src="./assets/player-images/hand-move.jpg" id="handMove">
+		<img src="./assets/player-images/hand-slap.jpg" id="handSlap">
 	</div>
 	<canvas></canvas>
 

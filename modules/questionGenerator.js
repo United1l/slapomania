@@ -8,6 +8,7 @@ export class QuestionGenerator {
 	this.answerText = "";
 	this.solution = 0;
 	this.keyTracker = false;
+	this.questionTimer = "";
 	}
 
 	draw(context, x, y) {
@@ -41,7 +42,21 @@ export class QuestionGenerator {
 				if(!isNaN(keyToNumber)) this.answerText += keyToNumber;
 				else if (key == 'Backspace') this.answerText = this.answerText.substring(0, this.answerText.length - 1);
 				else console.log('Input is not a number');
-				} else this.answerText = "";
+			} else if (e.key == 'Escape' && this.game.gamePlay) {
+					this.game.gamePlay = false;
+
+					// Game paused and display settings box
+					if ((this.game.AI.life != 0 || this.game.player.life != 0)) {
+						this.game.clearTimeOut(this.questionTimer);
+						this.game.clearTimeOut(this.gameTimer);
+						let currentTimeDiff = ((new Date()).getTime()) - this.game.startTime;
+						this.game.gameRoundTime -= currentTimeDiff;
+						console.log(this.game.gameRoundTime);
+					}
+			} else if (e.key == 'Escape' && !this.game.gamePlay) {
+					this.game.gameStart(true);
+					this.outputOperation();
+			} else this.answerText = "";
 		});
 
 		window.addEventListener('keyup', () => {
@@ -51,12 +66,18 @@ export class QuestionGenerator {
 	}
 
 	outputOperation() {
-		setTimeout(() => {
-			this.questionGenerate = true;
-			this.updateQuestion(this.questionText);
-			this.answerText = "";
+		this.questionTimer = setTimeout(() => {
+			if (this.game.gamePlay) {
+				if (this.questionGenerate && (this.answerText.length < eval(this.questionText) || this.answerText == "") && this.answerText != "correct!") {
+					this.game.player.life -= 10;
+					this.game.player.lifeDrain += 10;
+				}
+				this.questionGenerate = true;
+				this.updateQuestion(this.questionText);
+				this.answerText = "";
+			}
 			this.outputOperation();
-		}, 10000);
+			}, 10000);
 	}
 
 	updateQuestion(prevQuestion) {
