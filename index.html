@@ -29,6 +29,21 @@
 			align-items: center;
 		}
 
+		#backgroundImageBox {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100vh;
+			width: 100vw;	
+			opacity: 0.5;
+			z-index: -10;
+		}
+
+		#background {
+			height: 100%;
+			width: 100%;
+		}
+
 		#beforeGS {
 			display: flex;
 			position: absolute;
@@ -53,6 +68,37 @@
 			font-size: 16px;
 		}
 
+		#instructionsBoxFS {
+			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 10;
+			height: inherit;
+			width: inherit;
+			flex-direction: column-reverse;
+			justify-content: center;
+			align-items: center;
+			background-color: hsla(0, 0%, 0%, 0.4);
+		}
+
+		#instructionsBox {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			align-items: center;
+			color: hsl(193, 98%, 36%);
+		}
+
+		#instructionsList {
+			list-style-type: square;
+			text-decoration: none;
+		}
+
+		#startBtn {
+			font-size: 24px;
+		}
+
 		#gameEnd {
 			display: none;
 			position: absolute;
@@ -74,13 +120,38 @@
 			margin-bottom:5px;
 		}
 
-		#playAgainBtn, #startBtn {
+		#playAgainBtn, #startBtn, #closeBtn {
 			cursor: pointer;
 		}
 
-		#playAgainBtn:hover, #startBtn:hover {
+		#playAgainBtn:hover, #startBtn:hover #closeBtn:hover {
 			color: lime;
-		} 
+		}
+
+		#pauseScreen {
+			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 10;
+			height: inherit;
+			width: inherit;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			background-color: hsla(0, 0%, 0%, 0.4);
+			color: white;
+		}
+
+		#menuList {
+			list-style-type: square;
+			text-decoration: none;
+		}
+
+		#menuList li {
+			margin-top: 10px;
+			cursor: pointer;
+		}
 
 		#overHeadBanner {
 			position: absolute;
@@ -136,23 +207,44 @@
 			color: white;
 		}
 
+		#displayScore {
+			position: absolute;
+			top: 7%;
+			z-index: 10;
+			width: inherit;
+			height: 2vh;
+			display: none;
+			justify-content: space-between;
+			color: white;
+		}
+
 		#imageBox {
 			display: none;
 		}
 
 		canvas {
 			max-width: 100%;
-			background-color: darkorange;
 		}
 	}  
 	</style>
 </head>
 <body>
+	<div id="backgroundImageBox"><img src="./assets/background-images/ring.jpg" id="background"></div>
 	<div id="beforeGS">
 		<p id="greeting">Welcome to Slapomania</p>
-		<p id="tagline">Where a slap is needed is a slap given.</p>
+		<p id="tagline">A mental flex game with the occasional slap.</p>
 		<div id="instructionsBox">
-			<ul></ul>
+			<p>Instructions</p>
+			<ul id="instructionsList">
+				<li><p>The game will generate a random addition question to you in eight secs (default)</p></li>
+				<li><p>Players must enter their input after questions appear</p></li>
+				<li><p>Players' answers' evaluate to "correct!" or "wrong" after the length of their input matches the computed solution</p></li>
+				<li><p>If you're wrong, the AI swats you but you get to smolder it everytime you're right</p></li>
+				<li><p>You can keep track of the games' scores' by turning it on in menu</p></li>
+				<li><p>Difficulty mode can be set in menu</p></li>
+				<li><p>Press Esc to pause game and view the menu</p></li>
+				<li><p>Refresh or close the browser to quit game.</p></li>
+			</ul>
 		</div>
 		<p id="startBtn">Start</p>
 	</div>
@@ -161,6 +253,23 @@
 		<div><p id="gameWinner"></p></div>
 		<p id="playAgainBtn">Play Again</p>
 	</div>
+	<div id="pauseScreen">
+		<p>Menu</p>
+		<ul id="menuList">
+			<li><label for="scoreTracker">Turn on Score Tracker
+				<input type="checkbox" name="scoreTracker" id="scoreTracker" value="scores"/>
+			</label>
+			</li>
+			<li><select name="difficultySelect" id="difficultSelect">
+				<option value="easy" id="easy">Easy</option>
+				<option value="hard" id="hard">Hard</option>
+			</select>
+				<label for="difficultySelect">Difficulty</label>
+			</li>
+			<li><p id="menuItem3">Instructions</p></li>
+		</ul>
+	</div>
+	<div id="instructionsBoxFS"><p id="closeBtn">Close</p></div>
 	<div id="overHeadBanner">
 		<div class="lifeBar">
 			<div class="playerIcons">
@@ -179,14 +288,16 @@
 			<div id="userBar" class="healthBar"></div>
 		</div>
 	</div>
+	<div id="displayScore">
+		<p id="AIscore"></p>
+		<p id="playerScore"></p>
+	</div>
 	<div id="imageBox">
 		<img src="./assets/player-images/player-default.png" id="playerDefault">
-		<img src="./assets/player-images/player-slapped.png" id="playerSlapped">
-		<img src="./assets/player-images/hand-move.jpg" id="handMove">
-		<img src="./assets/player-images/hand-slap.jpg" id="handSlap">
+		<img src="./assets/player-images/hand-move.png" id="handMove">
 	</div>
-	<canvas></canvas>
+	<canvas id="paper"></canvas>
 
-<script type="module" src="main.js"></script>
+	<script type="module" src="main.js"></script>
 </body>
 </html>

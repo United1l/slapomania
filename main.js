@@ -2,7 +2,7 @@ import { Player } from './modules/player.js';
 import { QuestionGenerator } from './modules/questionGenerator.js';
 
 window.addEventListener('load', function() {
-	const canvas = document.querySelector('canvas');
+	const canvas = document.getElementById('paper');
 	const ctx = canvas.getContext('2d');
 
 	const beforeGS = document.getElementById('beforeGS');
@@ -11,8 +11,10 @@ window.addEventListener('load', function() {
 	const playAgainBtn = document.getElementById('playAgainBtn');
 	const startBtn = document.getElementById('startBtn');
 
-	const AIBar = document.getElementById('AIBar');
+	const aIbar = document.getElementById('AIBar');
+	const aIscore = document.getElementById('AIscore');
 	const userBar = document.getElementById('userBar');
+	const userscore = document.getElementById('playerScore');
 	const clockNumber = document.getElementById('clockNumber');
 
 	canvas.width = 1024;
@@ -23,27 +25,39 @@ window.addEventListener('load', function() {
 		beforeGS.style.display = 'none';
 	});
 
+	playAgainBtn.addEventListener('click', () => {
+		game.gameStart(true);
+		gameEndDisp.style.display = 'none';
+		game.questions.outputOperation();
+		game.AI.life = 100;
+		game.player.life = 100;
+	});
+
 	class Game {
 		constructor(width, height) {
 			this.gamePlay = false;
 			this.gameTimer = "";
+			this.gameRoundTime = 121000;
+			this.width = width;
+			this.height = height;
+
 			this.startTime = 0;
 			this.timeDiff = 0;
 			this.playerWin = "You Win!";
-			this.AIWin = "You Lose!"
-			this.gameRoundTime = 101000;
-			this.width = width;
-			this.height = height;
-			const playerPosTop = this.height - (this.height/2.5);
-			this.AI = new Player(this, this.width - 924, playerPosTop, false);
-			this.player = new Player(this, this.width - 100, playerPosTop, true);
-			this.lifeBars = [AIBar, userBar];
+			this.AIWin = "You Lose!";
+			this.AIscore = 0;
+			this.playerScore = 0;
+			
+			const playerPosTop = this.height/8;
+			this.AI = new Player(this, this.width - 974, playerPosTop);
+			this.player = new Player(this, this.width - 300, playerPosTop);
+			this.lifeBars = [aIbar, userBar];
 			this.questions = new QuestionGenerator(this);
 			}
 
 		draw(context) {
-			this.AI.draw(context);
-			this.player.draw(context);
+			this.AI.draw(context, this.AI.playerImage, this.AI.handImage, this.AI.handW, this.AI.handH, this.AI.flip);
+			this.player.draw(context, this.player.playerImage, this.player.handImage, this.player.handW, this.player.handH, this.player.flip);
 			this.questions.draw(context, this.width/1.7, this.height/1.5);
 		}
 
@@ -58,19 +72,32 @@ window.addEventListener('load', function() {
 					this.questions.answerText = "correct!";
 					this.AI.life -= 10;
 					this.AI.lifeDrain += 10;
+					this.player.slap('player', this.player.Slap);
+					this.questions.questionGenerate = false;
 				} else if (answer != "" && answer.length == solution.toString().length && !this.evaluateAns((parseInt(answer)), solution)) {
 					this.questions.answerText = "wrong!";
 					this.player.life -= 10;
 					this.player.lifeDrain += 10;
+					this.AI.slap('AI', this.AI.Slap);
+					this.questions.questionGenerate = false;
 				} else if (answer != "" && answer.length < solution.toString().length) this.questions.answerText = answer;		
 			}
 
-			this.AI.update(this.lifeBars[0], "to right");
-			this.player.update(this.lifeBars[1], "to left");
+			this.AI.updates(this.lifeBars[0], "to right");
+			this.player.updates(this.lifeBars[1], "to left");
 
 			// Game end scenario when when one player dies
-			if (this.AI.life == 0) this.gameEnd(this.playerWin);
-			if (this.player.life == 0) this.gameEnd(this.AIWin);
+			if (this.AI.life == 0) {
+				this.gameEnd(this.playerWin);
+				this.playerScore += 1;
+			}
+			if (this.player.life == 0) {
+				this.gameEnd(this.AIWin);
+				this.AIscore += 1;
+			}
+
+			//Game end when timer == 0
+			//this.gameEndTimer();
 
 			this.timeDiff = (new Date()).getTime() - this.startTime;
 			clockNumber.innerText = `${Math.floor((this.gameRoundTime/1000) - (this.timeDiff/1000))}`;
@@ -94,19 +121,15 @@ window.addEventListener('load', function() {
 			this.gameTimer = setTimeout(() => {
 				// Game end after game round time runs out
 				if (this.gamePlay) {
-						if (this.gameRoundTime <= 0 && (this.questions.keyTracker || !this.questions.keyTracker)) {
-							if ((this.AI.life < this.player.life)) this.gameEnd(this.playerWin);
-							else if (this.AI.life > this.player.life) this.gameEnd(this.AIWin);
-							else this.gameEnd("Draw");
-							this.clearTimeOut(this.questions.questionTimer);
-						}
-					}
+					this.gameEndTimer();
+					}	
 			}, this.gameRoundTime);
 		}
 
 		// Function when game starts. It sets gamePlay to true and starts the timer
 		gameStart(bool) {
 			this.gamePlay = bool;
+			this.gameRoundTime = 121000;
 			this.startTime = (new Date()).getTime();
 			this.gameRoundTimer();
 		}
@@ -116,7 +139,23 @@ window.addEventListener('load', function() {
 			this.gamePlay = false;
 			gameWinStatus.innerText = gamestatus;
 			gameEndDisp.style.display = 'flex';
-			this.questions.questionGenerate = false;	
+			this.questions.questionGenerate = false;
+			this.questions.questionText = "";
+			this.questions.answerText = "";
+			this.clearTimeOut(this.questions.questionTimer);
+			this.clearTimeOut(this.gameRoundTime);
+		}
+
+		gameEndTimer() {
+				if ((this.AI.life < this.player.life)) {
+					this.gameEnd(this.playerWin);
+					this.playerScore += 1;
+				}
+				else if (this.AI.life > this.player.life) {
+					this.gameEnd(this.AIWin);
+					this.AIscore += 1;
+				}
+				else if(this.AI.life == this.player.life) this.gameEnd("Draw");
 		}
 	}
 
@@ -126,20 +165,14 @@ window.addEventListener('load', function() {
 	console.log(game.player);
 	console.log(game.AI);
 
-	playAgainBtn.addEventListener('click',() => {
-		game.gameStart(true);
-		gameEndDisp.style.display = 'none';
-		game.gameRoundTime = 101000;
-		game.AI.life = 100;
-		game.player.life = 100;
-		game.questions.outputOperation();
-	});
+	aIscore.innerText = `${game.AIscore}`;
+	userscore.innerText = `${game.playerScore}`;
 
 	function animate() {
 		if (game.gamePlay) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 			game.draw(ctx);
-			game.update();
+			game.update(ctx);
 		}		
 
 		requestAnimationFrame(animate);
