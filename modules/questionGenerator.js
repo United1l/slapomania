@@ -71,8 +71,8 @@ export class QuestionGenerator {
 		this.questionTimer = setTimeout(() => {
 			if (this.game.gamePlay) {
 				if (this.questionGenerate && (this.answerText.length < eval(this.questionText) || this.answerText == "") && this.answerText != "correct!") {
-					this.game.player.life -= 10;
-					this.game.player.lifeDrain += 10;
+					this.game.player.life -= 5;
+					this.game.lifeDecrPlayer += 5;
 					this.game.AI.slap('AI',this.game.AI.Slap);
 				}
 				this.updateQuestion(this.questionText);

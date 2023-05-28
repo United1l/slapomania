@@ -24,15 +24,15 @@ window.addEventListener('load', function() {
 	startBtn.addEventListener('click', () => {
 		game.gameStart(true);
 		beforeGS.style.display = 'none';
-		console.log(window.innerWidth);
 	});
+
 
 	playAgainBtn.addEventListener('click', () => {
 		game.gameStart(true);
 		gameEndDisp.style.display = 'none';
 		game.questions.outputOperation();
-		game.AI.life = 100;
-		game.player.life = 100;
+		game.lifeDecrAI = 0;
+		game.lifeDecrPlayer = 0;
 	});
 
 
@@ -53,6 +53,8 @@ window.addEventListener('load', function() {
 			this.AI = new Player(this, this.width - 974, playerPosTop);
 			this.player = new Player(this, this.width - 300, playerPosTop);
 			this.lifeBars = [aIbar, userBar];
+			this.lifeDecrAI = 0;
+			this.lifeDecrPlayer = 0;
 
 			this.questions = new QuestionGenerator(this);
 			this.gameSounds = new GameAudio();
@@ -76,22 +78,28 @@ window.addEventListener('load', function() {
 				if (answer != ""  && answer.length == solution.toString().length && this.evaluateAns((parseInt(answer)), solution)) {
 					this.questions.answerText = "correct!";
 					this.AI.life -= 10;
-					this.AI.lifeDrain += 10;
+					this.lifeDecrAI -= 10;
+					
 					this.player.slap('player', this.player.Slap);
 					this.questions.questionGenerate = false;
 				} 
 				else if (answer != "" && answer.length == solution.toString().length && !this.evaluateAns((parseInt(answer)), solution)) {
 					this.questions.answerText = "wrong!";
 					this.player.life -= 10;
-					this.player.lifeDrain += 10;
+					this.lifeDecrPlayer += 10;
+
 					this.AI.slap('AI', this.AI.Slap);
 					this.questions.questionGenerate = false;
 				} 
 				else if (answer != "" && answer.length < solution.toString().length) this.questions.answerText = answer;		
 			}
 
-			this.AI.updates(this.lifeBars[0], "to right");
-			this.player.updates(this.lifeBars[1], "to left");
+			this.lifeBars[0].style.transform = `translateX(${this.lifeDecrAI}%)`;
+
+			this.lifeBars[1].style.transform = `translateX(${this.lifeDecrPlayer}%)`;
+
+			this.AI.updates();
+			this.player.updates();
 
 			// Game end scenario when when one player dies
 			if (this.AI.life == 0) {
@@ -148,7 +156,7 @@ window.addEventListener('load', function() {
 			this.questions.questionText = "";
 			this.questions.answerText = "";
 
-			let cheersSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[5]);
+			let cheersSound = this.gameSounds.getAudio(this.gameSounds.soundsArray[4]);
 			cheersSound.play();
 
 			this.clearTimeOut(this.questions.questionTimer);
@@ -171,14 +179,11 @@ window.addEventListener('load', function() {
 
 	const game = new Game(canvas.width, canvas.height);
 
-	game.gamePlaySound.play();
-	game.gamePlaySound.loop = true;
-
-
 	let AIscore = 0;
 	let playerScore = 0;
 
 	aIscore.innerText = `${AIscore}`;
+
 	userscore.innerText = `${playerScore}`;
 
 	function animate() {
@@ -186,6 +191,8 @@ window.addEventListener('load', function() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 			game.draw(ctx);
 			game.update(ctx);
+			game.gamePlaySound.play();
+			game.gamePlaySound.loop = true;
 		}		
 
 		requestAnimationFrame(animate);

@@ -176,7 +176,6 @@
 			justify-content: space-evenly;
 			width: inherit;
 			height: calc(100vh * 0.05);
-			background-color: white;
 		}
 
 		.lifeBar {
@@ -191,23 +190,44 @@
 			flex-direction: row-reverse;
 		}
 
+		.healthBarBox {
+			width: 75%;
+			height: inherit;
+			position: relative;
+			overflow-x: hidden;
+		}
+
+		.healthBar {
+			position: relative;
+			height: inherit;
+			width: 100%;
+			height: 100%;
+			background-color: hsl(129, 50%, 59%);
+		}
+
+		.lifeDrain {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -5;
+			height: 100%;
+			width: 100%;
+			background-color: hsl(210, 9%, 31%);
+		}
+
 		.playerIcons {
 			height: inherit;
 			display: flex;
 			justify-content: space-evenly;
 			width: 20%;
 			align-items: center;
+			color: white;
 		}
 
 		.playerIcons >img {
 			height: 50px;
 			width: 60px;
 			border-radius: 50%;
-		}
-
-		.healthBar {
-			height: inherit;
-			width: 75%;
 		}
 
 		#clock {
@@ -259,12 +279,13 @@
 				<li><p>The game will generate a random addition or subtraction question to you in a few secs</p></li>
 				<li><p>Players must enter their input after questions appear</p></li>
 				<li><p>Players' answers' evaluate to "correct!" or "wrong" after the length of their input matches the computed solution</p></li>
-				<li><p>If you're wrong or don't answer, the Bot swats you but you get to smolder it everytime you're right</p></li>
+				<li><p>If you're wrong or don't answer the question, the Bot swats you but you get to smolder it everytime you're right</p></li>
 				<li><p>You can keep track of the games' scores' by turning it on in menu</p></li>
 				<li><p>Or view the instructions again in menu</p></li>
 				<li><p>The challenger is always the bot</p></li>
 				<li><p>Press Esc to pause game and view the game menu</p></li>
 				<li><p>Refresh or close the tab or browser to quit game.</p></li>
+				<li><p>Click Start to begin game.</p></li>
 			</ul>
 		</div>
 		<p id="startBtn">Start</p>
@@ -291,7 +312,10 @@
 				<img src="./assets/player-images/AI.jpg">
 				<p>Bot</p>
 			</div>
-			<div id="AIBar" class="healthBar"></div>
+			<div class="healthBarBox">
+				<div id="AIBar" class="healthBar"></div>
+				<div class="lifeDrain"></div>
+			</div>
 		</div>
 		<div id="clock"><p id="clockNumber">
 		</p></div>
@@ -300,7 +324,10 @@
 				<img src="./assets/player-images/user.jpg">
 				<p>You</p>
 			</div>
-			<div id="userBar" class="healthBar"></div>
+			<div class="healthBarBox">
+				<div id="userBar" class="healthBar"></div>
+				<div class="lifeDrain"></div>
+			</div>
 		</div>
 	</div>
 	<div id="displayScore">

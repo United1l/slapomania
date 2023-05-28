@@ -6,7 +6,8 @@ export class Player {
 		this.width = 250;
 		this.height = 250;
 		this.life = 100;
-		this.lifeDrain = 0.1;
+		this.playerLifeBar = "";
+
 		this.flip = false;
 		this.x = x;
 		this.y = y;
@@ -56,11 +57,6 @@ export class Player {
 		}
 	}
 
-	updateLifeBars(lifebar, direction) {
-			let playerLifeBar = lifebar;
-			playerLifeBar.style.background = `linear-gradient(${direction}, darkorange ${this.life - 0.1}%, black ${this.lifeDrain}%)`;
-	}	
-
 	slap(ID, slap) {
 		if (ID == 'player' && !slap) this.userSlap = true;
 		else if (ID == 'AI' && !slap) this.AIslap = true;
@@ -70,8 +66,7 @@ export class Player {
 		this.width = 250;
 	}
 
-	updates(lifebar, direction) {
-		this.updateLifeBars(lifebar, direction);
+	updates() {
 		this.game.player.y -= this.velocityUp;
 
 		if (this.game.player.y < this.game.height/8) this.velocityUp = -this.gravity;
@@ -97,7 +92,7 @@ export class Player {
 				this.userSlap = false;
 				this.Slap = true;
 
-				let slapSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[4]);
+				let slapSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[3]);
 				slapSound.play();
 			}	
 		} 
@@ -116,7 +111,7 @@ export class Player {
 				this.Slap = true;
 				this.game.player.velocityUp = 50;
 
-				let slapSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[4]);
+				let slapSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[3]);
 				slapSound.play();
 			}
 
@@ -132,9 +127,6 @@ export class Player {
 	 		this.xAdderUser = 0;
 	 		this.game.player.yAdderUser = 0;
 		}
-
-//		if (this.AIhandX == 715 && this.AIhandX > 250) {
-//		}
 
 		// AI after slap return animation
 		if (this.AIhandX >= 714) {
