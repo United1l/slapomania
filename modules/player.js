@@ -96,6 +96,9 @@ export class Player {
 				this.game.AI.width = 100;
 				this.userSlap = false;
 				this.Slap = true;
+
+				let slapSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[4]);
+				slapSound.play();
 			}	
 		} 
 
@@ -112,6 +115,9 @@ export class Player {
 				this.AIslap = false
 				this.Slap = true;
 				this.game.player.velocityUp = 50;
+
+				let slapSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[4]);
+				slapSound.play();
 			}
 
 		} 

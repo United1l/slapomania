@@ -1,5 +1,6 @@
 import { Player } from './modules/player.js';
 import { QuestionGenerator } from './modules/questionGenerator.js';
+import { GameAudio } from './modules/audio.js';
 
 window.addEventListener('load', function() {
 	const canvas = document.getElementById('paper');
@@ -23,6 +24,7 @@ window.addEventListener('load', function() {
 	startBtn.addEventListener('click', () => {
 		game.gameStart(true);
 		beforeGS.style.display = 'none';
+		console.log(window.innerWidth);
 	});
 
 	playAgainBtn.addEventListener('click', () => {
@@ -32,6 +34,7 @@ window.addEventListener('load', function() {
 		game.AI.life = 100;
 		game.player.life = 100;
 	});
+
 
 	class Game {
 		constructor(width, height) {
@@ -45,20 +48,21 @@ window.addEventListener('load', function() {
 			this.timeDiff = 0;
 			this.playerWin = "You Win!";
 			this.AIWin = "You Lose!";
-			this.AIscore = 0;
-			this.playerScore = 0;
 			
 			const playerPosTop = this.height/8;
 			this.AI = new Player(this, this.width - 974, playerPosTop);
 			this.player = new Player(this, this.width - 300, playerPosTop);
 			this.lifeBars = [aIbar, userBar];
+
 			this.questions = new QuestionGenerator(this);
+			this.gameSounds = new GameAudio();
+			this.gamePlaySound = this.gameSounds.getAudio(this.gameSounds.soundsArray[0]);
 			}
 
 		draw(context) {
 			this.AI.draw(context, this.AI.playerImage, this.AI.handImage, this.AI.handW, this.AI.handH, this.AI.flip);
 			this.player.draw(context, this.player.playerImage, this.player.handImage, this.player.handW, this.player.handH, this.player.flip);
-			this.questions.draw(context, this.width/1.7, this.height/1.5);
+			this.questions.draw(context, this.width/1.7, this.height/1.4);
 		}
 
 		update() { 
@@ -67,6 +71,7 @@ window.addEventListener('load', function() {
 
 			let solution = this.questions.solution;
 
+			// Question evaluation
 			if (this.questions.keyTracker) {
 				if (answer != ""  && answer.length == solution.toString().length && this.evaluateAns((parseInt(answer)), solution)) {
 					this.questions.answerText = "correct!";
@@ -74,13 +79,15 @@ window.addEventListener('load', function() {
 					this.AI.lifeDrain += 10;
 					this.player.slap('player', this.player.Slap);
 					this.questions.questionGenerate = false;
-				} else if (answer != "" && answer.length == solution.toString().length && !this.evaluateAns((parseInt(answer)), solution)) {
+				} 
+				else if (answer != "" && answer.length == solution.toString().length && !this.evaluateAns((parseInt(answer)), solution)) {
 					this.questions.answerText = "wrong!";
 					this.player.life -= 10;
 					this.player.lifeDrain += 10;
 					this.AI.slap('AI', this.AI.Slap);
 					this.questions.questionGenerate = false;
-				} else if (answer != "" && answer.length < solution.toString().length) this.questions.answerText = answer;		
+				} 
+				else if (answer != "" && answer.length < solution.toString().length) this.questions.answerText = answer;		
 			}
 
 			this.AI.updates(this.lifeBars[0], "to right");
@@ -96,9 +103,7 @@ window.addEventListener('load', function() {
 				this.AIscore += 1;
 			}
 
-			//Game end when timer == 0
-			//this.gameEndTimer();
-
+			// Clock
 			this.timeDiff = (new Date()).getTime() - this.startTime;
 			clockNumber.innerText = `${Math.floor((this.gameRoundTime/1000) - (this.timeDiff/1000))}`;
 		}
@@ -142,6 +147,10 @@ window.addEventListener('load', function() {
 			this.questions.questionGenerate = false;
 			this.questions.questionText = "";
 			this.questions.answerText = "";
+
+			let cheersSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[5]);
+			cheersSound.play();
+
 			this.clearTimeOut(this.questions.questionTimer);
 			this.clearTimeOut(this.gameRoundTime);
 		}
@@ -149,11 +158,11 @@ window.addEventListener('load', function() {
 		gameEndTimer() {
 				if ((this.AI.life < this.player.life)) {
 					this.gameEnd(this.playerWin);
-					this.playerScore += 1;
+					playerScore += 1;
 				}
 				else if (this.AI.life > this.player.life) {
 					this.gameEnd(this.AIWin);
-					this.AIscore += 1;
+					AIscore += 1;
 				}
 				else if(this.AI.life == this.player.life) this.gameEnd("Draw");
 		}
@@ -161,12 +170,16 @@ window.addEventListener('load', function() {
 
 
 	const game = new Game(canvas.width, canvas.height);
-	console.log(game);
-	console.log(game.player);
-	console.log(game.AI);
 
-	aIscore.innerText = `${game.AIscore}`;
-	userscore.innerText = `${game.playerScore}`;
+	game.gamePlaySound.play();
+	game.gamePlaySound.loop = true;
+
+
+	let AIscore = 0;
+	let playerScore = 0;
+
+	aIscore.innerText = `${AIscore}`;
+	userscore.innerText = `${playerScore}`;
 
 	function animate() {
 		if (game.gamePlay) {

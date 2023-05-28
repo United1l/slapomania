@@ -7,8 +7,6 @@ const instructionsBox = document.getElementById('instructionsBox');
 const instructionsBoxFS = document.getElementById('instructionsBoxFS');
 const closeBtn = document.getElementById('closeBtn');
 
-const easy = document.getElementById('easy');
-const hard = document.getElementById('hard');
 
 export class QuestionGenerator {
 	constructor(game) {
@@ -21,7 +19,6 @@ export class QuestionGenerator {
 	this.solution = 0;
 	this.keyTracker = false;
 	this.questionTimer = "";
-	this.questionScope = 200;
 	}
 
 	draw(context, x, y) {
@@ -49,6 +46,9 @@ export class QuestionGenerator {
 		window.addEventListener('keydown', e => {
 			this.keyTracker = false;
 			if (this.questionGenerate) {
+				let inputSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[2]);
+				inputSound.play();
+
 				let key = e.key;
 				let keyToNumber = parseInt(key);
 
@@ -76,6 +76,10 @@ export class QuestionGenerator {
 					this.game.AI.slap('AI',this.game.AI.Slap);
 				}
 				this.updateQuestion(this.questionText);
+
+				let questionSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[2]);
+				questionSound.play();
+
 				this.questionGenerate = true;
 				this.answerText = "";
 				this.game.player.Slap = false;
@@ -92,19 +96,15 @@ export class QuestionGenerator {
 					// Game paused and display settings box
 					if ((this.game.AI.life != 0) || (this.game.player.life != 0) || (this.game.AI.life == 100) || (this.game.player.life == 100)) {
 						this.clearConsoleTimer();
-
-						easy.addEventListener('click', () => {
-							this.questionScope = 200;
-						});
-						hard.addEventListener('click', () => {
-							this.questionScope = 400;
-						});
 					}
 					pauseScreen.style.display = 'flex';
-					console.log(this.questionScope);
+					this.game.gamePlaySound.pause();
 
 			} else if (key == 'Escape' && !this.game.gamePlay) {
 					pauseScreen.style.display = 'none';
+					instructionsBoxFS.style.display = 'none';
+					this.game.gamePlaySound.play();
+
 					this.game.gamePlay = true;
 					this.game.startTime = (new Date()).getTime();
 					this.game.gameRoundTimer();
@@ -140,7 +140,7 @@ export class QuestionGenerator {
 	}
 
 	randomNumber() {
-		return Math.floor((Math.random() * this.questionScope) + 1);
+		return Math.floor((Math.random() * 360) + 1);
 	}
 
 	randomOperator() {
