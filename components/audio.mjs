@@ -6,8 +6,9 @@ export class GameAudio {
 	}
 
 	getAudio(src) {
-		var source = new Audio();
+		let source = new Audio();
 		source.src = src;
+
 		return source;
 	}
 

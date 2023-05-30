@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "An action and mental game",
   "main": "main.js",
+  "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/United1l/slapomania/issues"
   },
-  "homepage": "https://github.com/United1l/slapomania#readme"
+  "homepage": "https://github.com/United1l/slapomania#readme",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.2",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0"
+  }
 }

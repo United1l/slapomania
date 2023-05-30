@@ -1,6 +1,6 @@
-import { Player } from './modules/player.js';
-import { QuestionGenerator } from './modules/questionGenerator.js';
-import { GameAudio } from './modules/audio.js';
+import { Player } from './components/player.mjs';
+import { QuestionGenerator } from './components/questionGenerator.mjs';
+import { GameAudio } from './components/audio.mjs';
 
 window.addEventListener('load', function() {
 	const canvas = document.getElementById('paper');
