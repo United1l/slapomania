@@ -135,7 +135,7 @@ window.addEventListener('load', function() {
 					this.gameEnd(this.AIWin);
 					this.AIscore += 1;
 				}
-				else if(this.AI.life == this.player.life) this.gameEnd("Draw");
+				else if(this.AI.life == this.player.life && this.gameRoundTime == 0) this.gameEnd("Draw");
 		}
 	}
 
