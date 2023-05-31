@@ -19,14 +19,13 @@ export class QuestionGenerator {
 	this.answerSlot = answerSlot;
 	this.answerText = answerSlot.value;
 	this.solution = 0;
-	this.keyTracker = false;
 	this.questionTimer = "";
 	this.ten = 10;
 	}
 
 	updates() {
 		// Question evaluation
-			if (this.keyTracker && this.questionGenerate == true) {
+			if (this.questionGenerate) {
 				if (this.answerSlot.value != "" && this.answerText.toString().length == this.solution.toString().length && this.answerText == this.solution) {
 					answerSlot.style.border = '2px solid green';
 					this.game.AI.life -= this.ten;
@@ -44,23 +43,15 @@ export class QuestionGenerator {
 					this.questionGenerate = false;
 				} 
 				else if (this.answerText != "" && this.answerText.toString().length < this.solution.toString().length) this.answerText = answerSlot.value;
-			
-			console.log(this.answerText);
 		}
 	}
 
 	inputOperation() {
 		window.addEventListener('keydown', () => {
-			answerSlot.focus();
 			if (this.questionGenerate && answerSlot.value <= 1000)
 				this.keyTracker = false;
 				this.answerText = this.answerSlot.value;	
 			});
-
-		window.addEventListener('keyup', () => {
-			this.keyTracker = true;
-			answerSlot.blur();
-		});
 	}
 
 	outputOperation() {
@@ -71,6 +62,8 @@ export class QuestionGenerator {
 					this.game.player.life -= this.ten;
 					this.game.lifeDecrPlayer += this.ten;		
 				}
+
+				answerSlot.focus();
 				answerSlot.style.border = '2px solid white';
 				this.updateQuestion(this.questionText);
 				questionSlot.innerText = this.questionText;
@@ -78,13 +71,18 @@ export class QuestionGenerator {
 				let questionSound = this.game.gameSounds.getAudio(this.game.gameSounds.soundsArray[2]);
 				questionSound.play();
 
+				if ("virtualKyeyboard" in navigator) {
+					VirtualKyeyboard.show();
+					VirtualKyeyboard.overlaysContent = false;
+				};
+
 				this.questionGenerate = true;
 				answerSlot.value = "";
 				this.game.player.Slap = false;
 				this.game.AI.Slap = false;
 			}
 			this.outputOperation();
-			}, 8000);
+			}, 9000);
 	}
 
 	gamePause(key) {
