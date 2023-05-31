@@ -6,7 +6,6 @@ export class Player {
 		this.width = 250;
 		this.height = 250;
 		this.life = 100;
-		this.playerLifeBar = "";
 
 		this.flip = false;
 		this.x = x;
@@ -66,7 +65,7 @@ export class Player {
 		this.width = 250;
 	}
 
-	updates() {
+	updates(winStat) {
 		this.game.player.y -= this.velocityUp;
 
 		if (this.game.player.y < this.game.height/8) this.velocityUp = -this.gravity;
@@ -137,5 +136,10 @@ export class Player {
 			this.game.AI.yAdderAI = 0;
 			this.reset();
 		}
+
+		// Game end scenario when player dies
+			if (this.life == 0) {
+				this.game.gameEnd(winStat);
+			}
 	} 
 }

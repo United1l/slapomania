@@ -256,6 +256,40 @@
 			color: white;
 		}
 
+		#questionBox {
+			font-family: 'poppins', sans-serif;
+			position: absolute;
+			bottom: 15%;
+			right: 10%;
+			height: 160px;
+			max-width: 360px;
+			display: flex;
+			flex-direction: column;
+			border-radius: 10px;
+			background-color: hsl(210, 9%, 31%);
+		}
+
+		#question, #answer {
+			flex: 1;
+			width: 100%;
+			height: 50%;	
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 40px;
+			color: hsl(129, 50%, 59%);
+		}
+
+		#answerSlot {
+			width: 100%;
+			height: 70%;
+			border-radius: 10px;
+			background-color: hsl(210, 9%, 31%);
+			font-size: 35px;
+			color: hsl(0, 0%, 80%);
+			padding: 12px 30px;
+		}
+
 		#imageBox {
 			display: none;
 		}
@@ -283,7 +317,7 @@
 				<li><p>You can keep track of the games' scores' by turning it on in menu</p></li>
 				<li><p>Or view the instructions again in menu</p></li>
 				<li><p>The challenger is always the bot</p></li>
-				<li><p>Press Esc to pause game and view the game menu</p></li>
+				<li><p>Press Esc or Space to pause game and view the game menu</p></li>
 				<li><p>Refresh or close the tab or browser to quit game.</p></li>
 				<li><p>Click Start to begin game.</p></li>
 			</ul>
@@ -333,6 +367,10 @@
 	<div id="displayScore">
 		<p id="AIscore"></p>
 		<p id="playerScore"></p>
+	</div>
+	<div id="questionBox">
+		<div id="question"><p id="questionSlot"></p></div>
+		<div id="answer"><input type="number" id="answerSlot" max=1000 /></div>
 	</div>
 	<div id="imageBox">
 		<img src="./assets/player-images/player-default.png" id="playerDefault">
