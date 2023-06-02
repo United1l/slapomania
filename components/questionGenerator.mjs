@@ -5,7 +5,7 @@ const displayScore = document.getElementById('displayScore');
 const menuItem3 = document.getElementById('menuItem3');
 const instructionsBox = document.getElementById('instructionsBox');
 const instructionsBoxFS = document.getElementById('instructionsBoxFS');
-const closeBtn = document.getElementById('closeBtn');
+const closeBtn = document.querySelectorAll('.closeBtn');
 
 const questionSlot = document.getElementById('questionSlot');
 const answerSlot = document.getElementById('answerSlot');
@@ -157,7 +157,9 @@ menuItem3.addEventListener('click', () => {
 	pauseScreen.style.display = 'none';
 });
 
-closeBtn.addEventListener('click', () => {
+closeBtn.forEach(close => {
+	close.addEventListener('click', () => {
 	instructionsBoxFS.style.display = 'none';
-	pauseScreen.style.display = 'flex';
+	pauseScreen.style.display = 'none';
+	});
 });

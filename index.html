@@ -107,9 +107,13 @@
 			text-decoration: none;
 		}
 
-		#startBtn , #closeBtn {
+		#startBtn , .closeBtn {
 			font-size: 24px;
 		}
+
+		.closeBtn {
+			margin-top: 10px;
+		}		
 
 		#gameEnd {
 			display: none;
@@ -132,11 +136,11 @@
 			margin-bottom:5px;
 		}
 
-		#playAgainBtn, #startBtn, #closeBtn {
+		#playAgainBtn, #startBtn, .closeBtn {
 			cursor: pointer;
 		}
 
-		#playAgainBtn:hover, #startBtn:hover, #closeBtn:hover {
+		#playAgainBtn:hover, #startBtn:hover, .closeBtn:hover {
 			color: lime;
 		}
 
@@ -338,8 +342,9 @@
 			</li>
 			<li><p id="menuItem3">Instructions</p></li>
 		</ul>
+		<p class="closeBtn">close</p>
 	</div>
-	<div id="instructionsBoxFS"><p id="closeBtn">Close</p></div>
+	<div id="instructionsBoxFS"><p class="closeBtn">Close</p></div>
 	<div id="overHeadBanner">
 		<div class="lifeBar">
 			<div class="playerIcons">
